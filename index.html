@@ -27,41 +27,28 @@
         <div class="list" id="list"></div>
     </main>
     <script type="module">
-        let n=1
-        const list = document.getElementById("list")
-        while (n<1000) { // :)
-            try{
-                var pngP="blocks/block"+n+"/image.png" // 380 на 180
-
-                var txtP="blocks/block"+n+"/text.txt"
-                var txtFile=await fetch(txtP)
-                var txttext=await txtFile.text();
-                var lines=txttext.split("\n");
-                var line0=lines[0];
-
-                var pdfP="blocks/block"+n+"/content.pdf"
-                var pdfFile = await fetch(pdfP);
-
-                if ((pdfFile.ok) && (txtFile.ok)) {
-                    var frame=document.createElement("a");
-                    frame.className="frmae";
-                    frame.href=pdfP;
-                    frame.innerHTML=
-                        `<div class="cont">
-                            <img src="${pngP}" class="contimage">
-                        </div>
-                        <p class="conttext">${line0}</p>`
-                    ;
-                    list.append(frame)
-                    n+=1
-                } else {
-                    throw e;
-                }
-            }
-            catch (e) { 
-                console.log("Последний блок: "+(n-1)); 
-                break; 
-            }
+        const list = document.getElementById("list");
+        const count = 6;
+            
+        async function loadText(block, i) {
+            let res = await fetch(`blocks/block${i}/text.txt`);
+            let text = await res.text();
+            block.querySelector(".conttext").textContent = text;
+        }
+        
+        for (let i = 1; i <= count; i++) {
+            const block = document.createElement("a");
+            block.className = "frmae";
+            block.href = `blocks/block${i}/content.pdf`;
+            block.innerHTML = `
+                <div class="cont">
+                    <img src="blocks/block${i}/image.png" class="contimage">
+                </div>
+                <p class="conttext">Загрузка...</p>
+            `;
+            list.appendChild(block);
+            
+            loadText(block, i); // Просто вызываем функцию для каждой карточки
         }
     </script>
     <script>
