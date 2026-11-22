@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT-polygon947</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+</head>
+<body>
+    <header class="header">
+        <div class="header_cont">
+            <ul class="header_list">                                                       
+                <li>
+                    <input class="search" id="search" type="text" autocomplete="off" placeholder="Поиск">
+                </li>
+                <li class="bot">
+                    <a class="header_link" href="/">Наш бот</a>
+                </li>
+                <li class="set">
+                    <button class="setbut"></button>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <main class="main">
+        <div class="list" id="list"></div>
+    </main>
+    <script type="module">
+        let n=1
+        const list = document.getElementById("list")
+        while (n<1000) { // :)
+            try{
+                var pngP="blocks/block"+n+"/image.png" // 380 на 180
+
+                var txtP="blocks/block"+n+"/text.txt"
+                var txtFile=await fetch(txtP)
+                var txttext=await txtFile.text();
+                var lines=txttext.split("\n");
+                var line0=lines[0];
+
+                var pdfP="blocks/block"+n+"/content.pdf"
+                var pdfFile = await fetch(pdfP);
+
+                if ((pdfFile.ok) && (txtFile.ok)) {
+                    var frame=document.createElement("a");
+                    frame.className="frmae";
+                    frame.href=pdfP;
+                    frame.innerHTML=
+                        `<div class="cont">
+                            <img src="${pngP}" class="contimage">
+                        </div>
+                        <p class="conttext">${line0}</p>`
+                    ;
+                    list.append(frame)
+                    n+=1
+                } else {
+                    throw e;
+                }
+            }
+            catch (e) { 
+                console.log("Последний блок: "+(n-1)); 
+                break; 
+            }
+        }
+    </script>
+    <script>
+        const searchbar=document.getElementById("search")
+        const list=document.getElementById("list")
+        var blocks=list.children
+        function search(event) {
+            if (event.key=="Enter"){
+                var inp=searchbar.value.toLowerCase()
+                console.log(inp)
+                for (i of blocks){
+                    if (i.textContent.toLowerCase().includes(inp)){
+                        i.style.display="block";
+                        window.scrollTo(0, 0);
+                    } else {
+                        i.style.display="none";
+                    }
+                }
+            }
+        } searchbar.onkeydown=search;
+    </script>
+</body>
+</html>
