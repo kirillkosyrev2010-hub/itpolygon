@@ -26,32 +26,29 @@
     <main class="main">
         <div class="list" id="list"></div>
     </main>
-    <script type="module">
-        const list = document.getElementById("list");
-        const count = 6;
-            
-        async function loadText(block, i) {
-            let res = await fetch(`blocks/block${i}/text.txt`);
-            let text = await res.text();
-            block.querySelector(".conttext").textContent = text;
-        }
-        
-        for (let i = 1; i <= count; i++) {
-            const block = document.createElement("a");
-            block.className = "frmae";
-            block.href = `blocks/block${i}/content.pdf`;
-            block.innerHTML = `
-                <div class="cont">
-                    <img src="blocks/block${i}/image.png" class="contimage">
+    <script type="module"> // ЗАГРУЗКА БЛОКОВ
+        let n=1
+        const list = document.getElementById("list")
+        var txtFile=await fetch("blocks/a.txt")
+        var txttext=await txtFile.text()
+        var lines=txttext.split("\n")
+        for (let i=0; i<lines.length; i++) {
+            var pngP="blocks/block"+i+"/image.png"
+            var pdfP="blocks/block"+i+"/content.pdf"
+            var line0=lines[i]
+            var frame=document.createElement("a");
+            frame.className="frmae";
+            frame.href=pdfP;
+            frame.innerHTML=
+                `<div class="cont">
+                    <img src="${pngP}" class="contimage">
                 </div>
-                <p class="conttext">Загрузка...</p>
-            `;
-            list.appendChild(block);
-            
-            loadText(block, i); // Просто вызываем функцию для каждой карточки
+                <p class="conttext">${line0}</p>`
+            list.append(frame)
         }
     </script>
-    <script>
+
+    <script> // ПОИСК
         const searchbar=document.getElementById("search")
         const list=document.getElementById("list")
         var blocks=list.children
